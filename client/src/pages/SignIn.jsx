@@ -31,7 +31,8 @@ const SignIn = () => {
       })
 
       const data = await res.json()
-      if(data.success === false){
+      console.log(res.status)
+      if(res.status !== 200){
         dispatch(signInFailure(data.message))
         return
       }
