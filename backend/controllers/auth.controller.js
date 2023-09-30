@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 
 export const signup= async(req,res, next)=>{
     const {username,email,password}=req.body;
+    console.log(req.body);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new User({
@@ -13,7 +14,7 @@ export const signup= async(req,res, next)=>{
     
     try{
         const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        res.status(201).json("User created successfully");
     }catch(err){
         next(err);
     }
