@@ -42,3 +42,36 @@ export const signin = async(req,res,next)=>{
         next(err);
     }
 }
+
+export const googleLogin = async(req,res,next)=>{
+    try{
+        const user = await User.findOne({email:req.body.email});
+        const password = "1234567";
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        if(!user){
+            const newUser = new User({
+                username:req.body.name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4),
+                email:req.body.email,
+                password:hashedPassword,
+                avatar:req.body.photo
+            });
+            const savedUser = await newUser.save();
+            const token = jwt.sign({_id:savedUser._id}, process.env.SECRET_KEY, {expiresIn:"1h"});
+            res.cookie("token",token,{
+                httpOnly:true,
+            }).status(200).json({success:true,token});
+        }
+        else{
+            const token = jwt.sign({_id:user._id}, process.env.SECRET_KEY, {expiresIn:"1h"});
+            res.cookie("token",token,{
+                httpOnly:true,
+            }).status(200).json({success:true,token});
+        }
+
+    }
+    catch(err){
+        next(err);
+    }
+
+}
