@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: "",
+        default: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vectorstock.com%2Froyalty-free-vectors%2Fblank-profile-picture-vectors&psig=AOvVaw2ahyFNh8RdUj_qvxFg_HIq&ust=1696236910188000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJCUrIW91IEDFQAAAAAdAAAAABAJ",
     },
 }, { timestamps: true });
 
