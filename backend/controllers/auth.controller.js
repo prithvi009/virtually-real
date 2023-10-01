@@ -33,9 +33,10 @@ export const signin = async(req,res,next)=>{
             return res.status(400).json("Wrong credentials");
         }
         const token = jwt.sign({_id:validUser._id}, process.env.SECRET_KEY, {expiresIn:"1h"});
+        const {password:pass, ...rest} = validUser._doc;
         res.cookie("token",token,{
             httpOnly:true,
-        }).status(200).json({success:true,token});
+        }).status(200).json(rest);
 
     }
     catch(err){
@@ -58,15 +59,17 @@ export const googleLogin = async(req,res,next)=>{
             });
             const savedUser = await newUser.save();
             const token = jwt.sign({_id:savedUser._id}, process.env.SECRET_KEY, {expiresIn:"1h"});
+            const { password: pass, ...rest } = savedUser._doc;
             res.cookie("token",token,{
                 httpOnly:true,
-            }).status(200).json({success:true,token});
+            }).status(200).json(rest);
         }
         else{
             const token = jwt.sign({_id:user._id}, process.env.SECRET_KEY, {expiresIn:"1h"});
+            const { password: pass, ...rest } = user._doc;
             res.cookie("token",token,{
                 httpOnly:true,
-            }).status(200).json({success:true,token});
+            }).status(200).json(rest);
         }
 
     }
