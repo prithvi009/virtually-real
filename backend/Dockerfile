@@ -1,13 +1,16 @@
 FROM node:slim 
 
-WORKDIR /app/dock
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-COPY . /app/dock/
+COPY package*.json ./
 
 RUN npm install
 
+COPY . .
+
 EXPOSE 8080
 
-CMD npm start
+CMD ["npm", "start"]
 
 
