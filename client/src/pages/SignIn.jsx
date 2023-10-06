@@ -32,12 +32,15 @@ const SignIn = () => {
       })
 
       const data = await res.json()
-      console.log(res.status)
+      console.log(data)
       if(res.status !== 200){
         dispatch(signInFailure(data.message))
         return
       }
-        dispatch(signInSuccess(data))
+        dispatch(signInSuccess({
+          user: data.user,
+          token: data.token
+        }))
       navigate('/')
     }
     catch(err){

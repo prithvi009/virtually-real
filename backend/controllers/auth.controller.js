@@ -34,9 +34,7 @@ export const signin = async(req,res,next)=>{
         }
         const token = jwt.sign({_id:validUser._id}, process.env.SECRET_KEY, {expiresIn:"1h"});
         const {password:pass, ...rest} = validUser._doc;
-        res.cookie("token",token,{
-            httpOnly:true,
-        }).status(200).json(rest);
+        res.status(200).json({ user:rest, token });
 
     }
     catch(err){
@@ -67,9 +65,7 @@ export const googleLogin = async(req,res,next)=>{
         else{
             const token = jwt.sign({_id:user._id}, process.env.SECRET_KEY, {expiresIn:"1h"});
             const { password: pass, ...rest } = user._doc;
-            res.cookie("token",token,{
-                httpOnly:true,
-            }).status(200).json(rest);
+            res.status(200).json({ user:rest, token });
         }
 
     }

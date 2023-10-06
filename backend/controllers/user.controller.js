@@ -1,7 +1,9 @@
 import User from '../models/user.model.js';
+import bcrypt from 'bcrypt';
 
 export const updateUser = async(req,res,next)=>{
     const id = req.params.id;
+    console.log(req);
     if(req.user._id !== req.params.id)
     {
         return res.status(403).json("You can update only your account");
@@ -25,4 +27,20 @@ export const updateUser = async(req,res,next)=>{
         next(err);
     }
 
+}
+
+
+export const deleteUser = async(req,res,next)=>{
+    const id = req.params.id;
+    if(req.user._id !== req.params.id)
+    {
+        return res.status(403).json("You can delete only your account");
+    }
+    try{
+        await User.findByIdAndDelete(id);
+        res.status(200).json("User has been deleted");
+    }
+    catch(err){
+        next(err);
+    }
 }

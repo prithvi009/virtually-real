@@ -7,11 +7,11 @@ import {getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import {app } from '../firebase'
 import { getDownloadURL } from 'firebase/storage'
 import { useDispatch } from 'react-redux'
-import { updateUserFailure, updateUserStart, updateUserSuccess } from '../state/users/userSlice'
+import { updateUserFailure, updateUserStart, updateUserSuccess, signOut } from '../state/users/userSlice'
 
 
 const Profile = () => {
-  const {currentUser} = useSelector(state => state.user);
+  const {currentUser, token, loading, error} = useSelector(state => state.user);
   const fileRef = useRef(null);
   const [file, setFile] = useState(null);
   const [filePerc, setFilePerc] = useState(0);
@@ -62,6 +62,7 @@ const Profile = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
@@ -100,12 +101,21 @@ const Profile = () => {
         <input type="text" placeholder='username' defaultValue={currentUser.username} className='border p-3 rounded-lg' onChange={handleChange} id="username"/>
         <input type="email" placeholder='email' defaultValue={currentUser.email} className='border p-3 rounded-lg' onChange={handleChange} id="email"/>
         <input type="password" placeholder='password' className='border p-3 rounded-lg' onChange={handleChange} id="password"/>
-        <button className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'>update</button>
+        <button
+          disabled={loading}
+          className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'
+        >
+          {loading ? 'Loading...' : 'Update'}
+        </button>
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-red-700 cursor-pointer'>Delete Account</span>
-        <span className='text-red-700 cursor-pointer'>Sign Out</span>
+        <span className='text-red-700 cursor-pointer' >Delete Account</span>
+        <span className='text-red-700 cursor-pointer' onClick={()=> dispatch(signOut())}>Sign Out</span>
+        <p className='text-red-700 mt-5'>{error ? error : ''}</p>
       </div>
+        <p className='text-green-700 mt-5'>
+          {updateSuccess ? 'User is updated successfully!' : ''}
+        </p>
     </div>
   )
 }
